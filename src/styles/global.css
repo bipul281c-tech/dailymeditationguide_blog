@@ -224,3 +224,20 @@ html.dark a:not(.button-link):hover {
     gap: 3rem;
   }
 }
+
+/* Hide default audio tags in markdown content (using custom player instead) */
+.page-content audio {
+  display: none;
+}
+
+/* Ensure content doesn't get hidden behind the audio player */
+body {
+  padding-bottom: 90px;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 640px) {
+  body {
+    padding-bottom: 120px;
+  }
+}
