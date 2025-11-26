@@ -116,7 +116,6 @@ const audioSrc = audioMatch ? audioMatch[1] : null;
         )
       }
     </div>
+    {audioSrc && <AudioPlayer audioSrc={audioSrc} title={title} />}
   </div>
 </MainLayout>
-
-{audioSrc && <AudioPlayer audioSrc={audioSrc} title={title} />}

@@ -321,89 +321,104 @@ const { audioSrc, title } = Astro.props;
 </style>
 
 <script>
+    // Use a more robust initialization approach
     function initAudioPlayer() {
-        const audio = document.getElementById(
-            "audioElement",
-        ) as HTMLAudioElement;
-        const playPauseBtn = document.getElementById("playPauseBtn");
-        const playIcon = document.getElementById("playIcon");
-        const pauseIcon = document.getElementById("pauseIcon");
-        const progressSlider = document.getElementById(
-            "progressSlider",
-        ) as HTMLInputElement;
-        const progressFill = document.getElementById("progressFill");
-        const timeDisplay = document.getElementById("timeDisplay");
+        // Wait a bit to ensure DOM is fully ready
+        const tryInit = () => {
+            const audio = document.getElementById(
+                "audioElement",
+            ) as HTMLAudioElement;
+            const playPauseBtn = document.getElementById("playPauseBtn");
+            const playIcon = document.getElementById("playIcon");
+            const pauseIcon = document.getElementById("pauseIcon");
+            const progressSlider = document.getElementById(
+                "progressSlider",
+            ) as HTMLInputElement;
+            const progressFill = document.getElementById("progressFill");
+            const timeDisplay = document.getElementById("timeDisplay");
 
-        if (!audio || !playPauseBtn || !progressSlider) return;
-
-        function formatTime(seconds: number): string {
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs.toString().padStart(2, "0")}`;
-        }
-
-        function updateTimeDisplay() {
-            if (timeDisplay) {
-                const current = formatTime(audio.currentTime);
-                const total = formatTime(audio.duration || 0);
-                timeDisplay.textContent = `${current} / ${total}`;
+            if (!audio || !playPauseBtn || !progressSlider) {
+                // Retry after a short delay if elements not found
+                setTimeout(tryInit, 50);
+                return;
             }
-        }
 
-        audio.addEventListener("loadedmetadata", () => {
-            updateTimeDisplay();
-            progressSlider.max = String(audio.duration);
-        });
+            function formatTime(seconds: number): string {
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${mins}:${secs.toString().padStart(2, "0")}`;
+            }
 
-        playPauseBtn.addEventListener("click", () => {
-            if (audio.paused) {
-                audio.play();
-                if (playIcon && pauseIcon) {
-                    playIcon.style.display = "none";
-                    pauseIcon.style.display = "block";
+            function updateTimeDisplay() {
+                if (timeDisplay) {
+                    const current = formatTime(audio.currentTime);
+                    const total = formatTime(audio.duration || 0);
+                    timeDisplay.textContent = `${current} / ${total}`;
                 }
-                playPauseBtn.setAttribute("aria-label", "Pause");
-            } else {
-                audio.pause();
+            }
+
+            audio.addEventListener("loadedmetadata", () => {
+                updateTimeDisplay();
+                progressSlider.max = String(audio.duration);
+            });
+
+            playPauseBtn.addEventListener("click", () => {
+                if (audio.paused) {
+                    audio.play();
+                    if (playIcon && pauseIcon) {
+                        playIcon.style.display = "none";
+                        pauseIcon.style.display = "block";
+                    }
+                    playPauseBtn.setAttribute("aria-label", "Pause");
+                } else {
+                    audio.pause();
+                    if (playIcon && pauseIcon) {
+                        playIcon.style.display = "block";
+                        pauseIcon.style.display = "none";
+                    }
+                    playPauseBtn.setAttribute("aria-label", "Play");
+                }
+            });
+
+            audio.addEventListener("timeupdate", () => {
+                updateTimeDisplay();
+                progressSlider.value = String(audio.currentTime);
+                if (progressFill) {
+                    const percentage =
+                        (audio.currentTime / audio.duration) * 100;
+                    progressFill.style.width = `${percentage}%`;
+                }
+            });
+
+            progressSlider.addEventListener("input", () => {
+                audio.currentTime = Number(progressSlider.value);
+                updateTimeDisplay();
+            });
+
+            audio.addEventListener("ended", () => {
                 if (playIcon && pauseIcon) {
                     playIcon.style.display = "block";
                     pauseIcon.style.display = "none";
                 }
                 playPauseBtn.setAttribute("aria-label", "Play");
-            }
-        });
+                progressSlider.value = "0";
+                if (progressFill) {
+                    progressFill.style.width = "0%";
+                }
+                updateTimeDisplay();
+            });
+        };
 
-        audio.addEventListener("timeupdate", () => {
-            updateTimeDisplay();
-            progressSlider.value = String(audio.currentTime);
-            if (progressFill) {
-                const percentage = (audio.currentTime / audio.duration) * 100;
-                progressFill.style.width = `${percentage}%`;
-            }
-        });
-
-        progressSlider.addEventListener("input", () => {
-            audio.currentTime = Number(progressSlider.value);
-            updateTimeDisplay();
-        });
-
-        audio.addEventListener("ended", () => {
-            if (playIcon && pauseIcon) {
-                playIcon.style.display = "block";
-                pauseIcon.style.display = "none";
-            }
-            playPauseBtn.setAttribute("aria-label", "Play");
-            progressSlider.value = "0";
-            if (progressFill) {
-                progressFill.style.width = "0%";
-            }
-            updateTimeDisplay();
-        });
+        tryInit();
     }
+
+    // Initialize immediately and also on various load events
+    initAudioPlayer();
 
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", initAudioPlayer);
-    } else {
-        initAudioPlayer();
     }
+
+    // Also try on window load as a fallback
+    window.addEventListener("load", initAudioPlayer);
 </script>
