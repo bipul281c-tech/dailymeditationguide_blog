@@ -213,6 +213,10 @@ html.dark a:not(.button-link):hover {
   @apply my-8 w-full px-0 text-center sm:my-12 sm:px-4;
 }
 
+.blog-content img {
+  @apply my-8 mx-auto block w-full max-w-4xl shadow-md;
+}
+
 @keyframes cursor-blink {
   0% {
     opacity: 0;

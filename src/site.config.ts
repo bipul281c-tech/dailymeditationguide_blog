@@ -108,6 +108,18 @@ const siteConfig: SiteConfig = {
             href: withBase('/contact')
         },
         {
+            text: 'Privacy Policy',
+            href: withBase('/privacy-policy')
+        },
+        {
+            text: 'Terms & Conditions',
+            href: withBase('/terms-and-conditions')
+        },
+        {
+            text: 'Disclaimer',
+            href: withBase('/disclaimer')
+        },
+        {
             text: 'RSS Feed',
             href: withBase('/rss.xml')
         },
@@ -158,8 +170,8 @@ const siteConfig: SiteConfig = {
         text: "Namaste! 🙏 Whether you have a question about your practice, a suggestion for a topic, or just want to share your journey, I'd love to hear from you.",
         email: {
             text: "Send me a message and I'll get back to you with mindful attention.",
-            href: "mailto:hello@dailymeditationguide.com",
-            email: "hello@dailymeditationguide.com"
+            href: "mailto:blog.boopul@gmail.com",
+            email: "blog.boopul@gmail.com"
         },
         socialProfiles: [
             {
