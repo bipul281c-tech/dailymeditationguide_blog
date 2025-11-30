@@ -1,6 +1,7 @@
 ---
 import siteConfig from "../site.config";
 import SiteIdentity from "./SiteIdentity.astro";
+import Youtube from "../icons/Youtube.astro";
 const currentYear = new Date().getFullYear();
 ---
 
@@ -19,14 +20,6 @@ const currentYear = new Date().getFullYear();
           </a>
         ))
       }
-      <!-- Hi! -->
-      <!-- Feel free to remove the below link or keep it to share your love for this theme! -->
-      <a
-        href="https://github.com/djsiddz/space-ahead"
-        title="Download Space Ahead ✨ Astro Theme"
-        target="_blank">Download Theme</a
-      >
-      <!-- Thank you! -->
     </div>
   </div>
   <div
@@ -41,7 +34,13 @@ const currentYear = new Date().getFullYear();
     <div class="flex flex-row gap-4 items-center justify-center sm:justify-end">
       {
         siteConfig.socialLinks?.map((link) => (
-          <a href={link.href} title={link.text} target="_blank">
+          <a
+            href={link.href}
+            title={link.text}
+            target="_blank"
+            class="flex items-center gap-2"
+          >
+            {link.icon === "youtube" && <Youtube class="w-5 h-5" />}
             {link.text}
           </a>
         ))

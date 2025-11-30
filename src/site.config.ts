@@ -10,7 +10,9 @@ export type Image = {
 export type Link = {
     text: string;
     href: string;
+    icon?: string;
 };
+
 
 export type Hero = {
     eyebrowText?: string;
@@ -119,27 +121,13 @@ const siteConfig: SiteConfig = {
             text: 'Disclaimer',
             href: withBase('/disclaimer')
         },
-        {
-            text: 'RSS Feed',
-            href: withBase('/rss.xml')
-        },
-        {
-            text: 'Sitemap',
-            href: withBase('/sitemap-0.xml')
-        }
+
     ],
     socialLinks: [
         {
-            text: 'Dribbble',
-            href: 'https://dribbble.com/'
-        },
-        {
-            text: 'Instagram',
-            href: 'https://instagram.com/'
-        },
-        {
-            text: 'X/Twitter',
-            href: 'https://twitter.com/'
+            text: 'YouTube',
+            href: 'https://www.youtube.com/@DailyMeditationn',
+            icon: 'youtube'
         }
     ],
     hero: {

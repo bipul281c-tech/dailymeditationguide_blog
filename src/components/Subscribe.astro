@@ -18,14 +18,19 @@ const { class: className } = Astro.props;
       style="border-color: var(--color-ash-gray);"
     >
       {subscribe.title && (
-        <h2
-          class:list={[
-            "w-full max-w-xl leading-tight sigmar-ff font-medium",
-            subscribe.text ? "mb-4" : "mb-8",
-          ]}
-        >
-          {subscribe.title}
-        </h2>
+          <h2
+            class:list={[
+              "w-full max-w-xl leading-tight sigmar-ff font-medium flex flex-wrap items-center justify-center gap-3",
+              subscribe.text ? "mb-4" : "mb-8",
+            ]}
+          >
+            {subscribe.title}
+            <span
+              class="text-xs kanit-light px-2 py-1 rounded-full border"
+              style="border-color: var(--color-coral-pink); color: var(--color-coral-pink);"
+              >Coming Soon</span
+            >
+          </h2>
       )}
       {subscribe.text && (
         <p class="w-full max-w-xl mb-8 text-sm leading-normal text-balance">

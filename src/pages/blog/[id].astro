@@ -14,6 +14,7 @@ import ArrowLeft from "../../icons/ArrowLeft.astro";
 import ArrowRight from "../../icons/ArrowRight.astro";
 import AudioPlayer from "../../components/AudioPlayer.astro";
 import siteConfig from "../../site.config";
+import TableOfContents from "../../components/TableOfContents.astro";
 
 export async function getStaticPaths() {
   const posts = (await getCollection("blogs")).sort(sortItemsByDateDesc);
@@ -36,7 +37,7 @@ type Props = {
 
 const { post, prevPost, nextPost } = Astro.props;
 const { title, pubDate, author, tags = [], image } = post.data;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 
 // Extract audio source from markdown content
 const audioMatch = post.body?.match(/<audio[^>]+src="([^"]+)"/);
@@ -56,66 +57,78 @@ const audioSrc = audioMatch ? audioMatch[1] : null;
       tags: tags,
     },
   }}
+  maxWidth="max-w-6xl"
 >
-  <div class="page-content">
-    <h1 class="sigmar-ff text-center text-balance px-4">{title}</h1>
-    <p
-      class="leading-6 sm:leading-8 text-center kanit-regular text-balance text-xs sm:text-sm px-4"
-    >
-      by 🧑‍🚀 <span class="kanit-bold">{author}</span> on <span class="kanit-bold"
-        >{new Date(pubDate).toDateString()}</span
-      >
-    </p>
-    {
-      image &&
-        image.url &&
-        (typeof image.url === "string" ? (
-          <img
-            class="mb-6 sm:mb-8 my-4 sm:my-6 px-4 w-full max-w-4xl mx-auto aspect-video object-cover rounded-xl block shadow-md"
-            src={image.url}
-            alt={image.alt || ""}
-          />
-        ) : (
-          <Image
-            class="mb-6 sm:mb-8 my-4 sm:my-6 px-4 w-full max-w-4xl mx-auto aspect-video object-cover rounded-xl block shadow-md"
-            src={image.url}
-            alt={image.alt || ""}
-          />
-        ))
-    }
-    <div class="font-light text-left px-4 blog-content">
-      <Content />
-    </div>
-    <p class="kanit-regular text-center text-balance text-xs sm:text-sm px-4">
-      Tagged: {
-        tags.map((tag) => (
-          <Button
-            class="px-4! m-2"
-            href={withBase("/tags/" + createSlugFromTitle(tag))}
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 my-8">
+    <aside class="lg:col-span-3 order-2 lg:order-2">
+      <div class="lg:sticky lg:top-24">
+        <TableOfContents headings={headings} />
+      </div>
+    </aside>
+    <article class="lg:col-span-9 order-1 lg:order-1 max-w-3xl mx-auto w-full">
+      <div class="page-content">
+        <h1 class="sigmar-ff text-center text-balance px-4">{title}</h1>
+        <p
+          class="leading-6 sm:leading-8 text-center kanit-regular text-balance text-xs sm:text-sm px-4"
+        >
+          by 🧑‍🚀 <span class="kanit-bold">{author}</span> on <span
+            class="kanit-bold">{new Date(pubDate).toDateString()}</span
           >
-            {tag}
+        </p>
+        {
+          image &&
+            image.url &&
+            (typeof image.url === "string" ? (
+              <img
+                class="mb-6 sm:mb-8 my-4 sm:my-6 px-4 w-full max-w-4xl mx-auto aspect-video object-cover rounded-xl block shadow-md"
+                src={image.url}
+                alt={image.alt || ""}
+              />
+            ) : (
+              <Image
+                class="mb-6 sm:mb-8 my-4 sm:my-6 px-4 w-full max-w-4xl mx-auto aspect-video object-cover rounded-xl block shadow-md"
+                src={image.url}
+                alt={image.alt || ""}
+              />
+            ))
+        }
+        <div class="font-light text-left px-4 blog-content">
+          <Content />
+        </div>
+        <p
+          class="kanit-regular text-center text-balance text-xs sm:text-sm px-4"
+        >
+          Tagged: {
+            tags.map((tag) => (
+              <Button
+                class="px-4! m-2"
+                href={withBase("/tags/" + createSlugFromTitle(tag))}
+              >
+                {tag}
+              </Button>
+            ))
+          }
+        </p>
+        <div
+          class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 my-6 sm:my-8 px-4"
+        >
+          <Button class="back-link w-full sm:w-auto" href={withBase("/blog")}>
+            <ArrowLeft class="w-5 h-5 fill-current mr-4" /> Back to All Stories
           </Button>
-        ))
-      }
-    </p>
-    <div
-      class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 my-6 sm:my-8 px-4"
-    >
-      <Button class="back-link w-full sm:w-auto" href={withBase("/blog")}>
-        <ArrowLeft class="w-5 h-5 fill-current mr-4" /> Back to All Stories
-      </Button>
-      {
-        (prevPost || nextPost) && nextPost && (
-          <Button
-            class="back-link text-balance w-full sm:w-auto"
-            href={withBase("/blog/" + getPostSlug(nextPost))}
-          >
-            Next Post: {nextPost.data.title}{" "}
-            <ArrowRight class="w-5 h-5 fill-current ml-4" />
-          </Button>
-        )
-      }
-    </div>
-    {audioSrc && <AudioPlayer audioSrc={audioSrc} title={title} />}
+          {
+            (prevPost || nextPost) && nextPost && (
+              <Button
+                class="back-link text-balance w-full sm:w-auto"
+                href={withBase("/blog/" + getPostSlug(nextPost))}
+              >
+                Next Post: {nextPost.data.title}{" "}
+                <ArrowRight class="w-5 h-5 fill-current ml-4" />
+              </Button>
+            )
+          }
+        </div>
+        {audioSrc && <AudioPlayer audioSrc={audioSrc} title={title} />}
+      </div>
+    </article>
   </div>
 </MainLayout>

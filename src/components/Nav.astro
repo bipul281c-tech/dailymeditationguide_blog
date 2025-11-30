@@ -5,10 +5,10 @@ import ThemeSwitcher from "./ThemeSwitcher.astro";
 import SiteIdentity from "./SiteIdentity.astro";
 import NavLinks from "./NavLinks.astro";
 import { withBase } from "../utils/helpers";
-const { activePage } = Astro.props;
+const { activePage, maxWidth = "max-w-3xl" } = Astro.props;
 ---
 
-<header>
+<header class={maxWidth}>
   <nav class="font-light w-full">
     <a href={withBase("/")}><SiteIdentity /></a>
     <div class="hidden sm:flex sm:gap-8">

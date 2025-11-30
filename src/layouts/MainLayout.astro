@@ -15,12 +15,14 @@ type LayoutProps = {
   activePage: string;
   showSubscribeForm?: boolean;
   seo?: Partial<SEOProps>;
+  maxWidth?: string;
 };
 const {
   pageTitle,
   activePage,
   showSubscribeForm = true,
   seo = {},
+  maxWidth = "max-w-3xl",
 } = Astro.props as LayoutProps;
 ---
 
@@ -57,8 +59,8 @@ const {
     <SEO title={pageTitle} {...seo} />
   </head>
   <body>
-    <main class="max-w-3xl mx-auto min-h-screen px-4 sm:px-6">
-      <Nav activePage={activePage} />
+    <main class={`mx-auto min-h-screen px-4 sm:px-6 ${maxWidth}`}>
+      <Nav activePage={activePage} maxWidth={maxWidth} />
       <slot />
       {showSubscribeForm && <Subscribe class="my-12 w-full" />}
       <Footer />
